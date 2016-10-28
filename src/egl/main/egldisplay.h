@@ -104,6 +104,8 @@ struct _egl_extensions
    EGLBoolean EXT_image_dma_buf_import;
    EGLBoolean EXT_swap_buffers_with_damage;
 
+   EGLBoolean IMG_context_priority;
+
    EGLBoolean KHR_cl_event2;
    EGLBoolean KHR_config_attribs;
    EGLBoolean KHR_create_context;

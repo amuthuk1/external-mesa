@@ -312,6 +312,33 @@ _eglParseContextAttribList(_EGLContext *ctx, _EGLDisplay *dpy,
             ctx->Flags |= EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR;
          break;
 
+      case EGL_CONTEXT_PRIORITY_LEVEL_IMG:
+         /* The  EGL_IMG_context_priority spec says:
+          *
+          * "EGL_CONTEXT_PRIORITY_LEVEL_IMG determines the priority level of
+          * the context to be created. This attribute is a hint, as an
+          * implementation may not support multiple contexts at some
+          * priority levels and system policy may limit access to high
+          * priority contexts to appropriate system privilege level. The
+          * default value for EGL_CONTEXT_PRIORITY_LEVEL_IMG is
+          * EGL_CONTEXT_PRIORITY_MEDIUM_IMG."
+          */
+         if (!dpy->Extensions.IMG_context_priority) {
+            err = EGL_BAD_ATTRIBUTE;
+            break;
+         }
+         switch (val) {
+         case EGL_CONTEXT_PRIORITY_HIGH_IMG:
+         case EGL_CONTEXT_PRIORITY_MEDIUM_IMG:
+         case EGL_CONTEXT_PRIORITY_LOW_IMG:
+            ctx->ContextPriority = val;
+            break;
+         default:
+            err = EGL_BAD_ATTRIBUTE;
+            break;
+         }
+         break;
+
       default:
          err = EGL_BAD_ATTRIBUTE;
          break;
@@ -569,6 +596,9 @@ _eglQueryContext(_EGLDriver *drv, _EGLDisplay *dpy, _EGLContext *c,
       break;
    case EGL_RENDER_BUFFER:
       *value = _eglQueryContextRenderBuffer(c);
+      break;
+   case EGL_CONTEXT_PRIORITY_LEVEL_IMG:
+      *value = c->ContextPriority;
       break;
    default:
       return _eglError(EGL_BAD_ATTRIBUTE, "eglQueryContext");
