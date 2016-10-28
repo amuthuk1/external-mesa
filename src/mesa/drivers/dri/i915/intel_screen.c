@@ -953,6 +953,7 @@ intelCreateContext(gl_api api,
 		   unsigned minor_version,
 		   uint32_t flags,
                    bool notify_reset,
+                   unsigned priority,
 		   unsigned *error,
                    void *sharedContextPrivate)
 {

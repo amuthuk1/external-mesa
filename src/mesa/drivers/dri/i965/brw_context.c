@@ -928,6 +928,7 @@ brwCreateContext(gl_api api,
                  unsigned minor_version,
                  uint32_t flags,
                  bool notify_reset,
+                 unsigned priority,
                  unsigned *dri_ctx_error,
 	         void *sharedContextPrivate)
 {

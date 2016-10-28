@@ -1027,7 +1027,7 @@ dri2_fill_context_attribs(struct dri2_egl_context *dri2_ctx,
 {
    int pos = 0;
 
-   assert(*num_attribs >= 8);
+   assert(*num_attribs >= 10);
 
    ctx_attribs[pos++] = __DRI_CTX_ATTRIB_MAJOR_VERSION;
    ctx_attribs[pos++] = dri2_ctx->base.ClientMajorVersion;
@@ -1061,6 +1061,28 @@ dri2_fill_context_attribs(struct dri2_egl_context *dri2_ctx,
 
       ctx_attribs[pos++] = __DRI_CTX_ATTRIB_RESET_STRATEGY;
       ctx_attribs[pos++] = __DRI_CTX_RESET_LOSE_CONTEXT;
+   }
+
+   if (dri2_ctx->base.ContextPriority != EGL_CONTEXT_PRIORITY_MEDIUM_IMG) {
+      unsigned val;
+
+      switch (dri2_ctx->base.ContextPriority) {
+      case EGL_CONTEXT_PRIORITY_HIGH_IMG:
+         val = __DRI_CTX_PRIORITY_HIGH;
+         break;
+      case EGL_CONTEXT_PRIORITY_MEDIUM_IMG:
+         val = __DRI_CTX_PRIORITY_MEDIUM;
+         break;
+      case EGL_CONTEXT_PRIORITY_LOW_IMG:
+         val = __DRI_CTX_PRIORITY_LOW;
+         break;
+      default:
+         _eglError(EGL_BAD_CONFIG, "eglCreateContext");
+         return false;
+      }
+
+      ctx_attribs[pos++] = __DRI_CTX_ATTRIB_PRIORITY;
+      ctx_attribs[pos++] = val;;
    }
 
    *num_attribs = pos;
@@ -1152,8 +1174,8 @@ dri2_create_context(_EGLDriver *drv, _EGLDisplay *disp, _EGLConfig *conf,
 
    if (dri2_dpy->image_driver) {
       unsigned error;
-      unsigned num_attribs = 8;
-      uint32_t ctx_attribs[8];
+      unsigned num_attribs = 10;
+      uint32_t ctx_attribs[10];
 
       if (!dri2_fill_context_attribs(dri2_ctx, dri2_dpy, ctx_attribs,
                                         &num_attribs))
@@ -1172,8 +1194,8 @@ dri2_create_context(_EGLDriver *drv, _EGLDisplay *disp, _EGLConfig *conf,
    } else if (dri2_dpy->dri2) {
       if (dri2_dpy->dri2->base.version >= 3) {
          unsigned error;
-         unsigned num_attribs = 8;
-         uint32_t ctx_attribs[8];
+         unsigned num_attribs = 10;
+         uint32_t ctx_attribs[10];
 
          if (!dri2_fill_context_attribs(dri2_ctx, dri2_dpy, ctx_attribs,
                                         &num_attribs))
@@ -1201,8 +1223,8 @@ dri2_create_context(_EGLDriver *drv, _EGLDisplay *disp, _EGLConfig *conf,
       assert(dri2_dpy->swrast);
       if (dri2_dpy->swrast->base.version >= 3) {
          unsigned error;
-         unsigned num_attribs = 8;
-         uint32_t ctx_attribs[8];
+         unsigned num_attribs = 10;
+         uint32_t ctx_attribs[10];
 
          if (!dri2_fill_context_attribs(dri2_ctx, dri2_dpy, ctx_attribs,
                                         &num_attribs))
