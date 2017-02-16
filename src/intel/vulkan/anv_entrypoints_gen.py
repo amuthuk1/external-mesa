@@ -143,6 +143,28 @@ entrypoints.append(('VkResult', 'CreateDmaBufImageINTEL',
                     'VkImage* pImage', len(entrypoints),
                     hash('vkCreateDmaBufImageINTEL'), None))
 
+# Insert Android specific entrypoints
+entrypoints.append(('VkResult', 'GetSwapchainGrallocUsageANDROID',
+                    'VkDevice device, ' +
+                    'VkFormat fmt, ' +
+                    'VkImageUsageFlags usage, ' +
+                    'int *grallocUsage', len(entrypoints),
+                    hash('GetSwapchainGrallocUsageANDROID'), None))
+
+entrypoints.append(('VkResult', 'AcquireImageANDROID',
+                    'VkDevice device, ' +
+                    'VkImage image, ' +
+                    'int nativeFenceFd, ' +
+                    'VkSemaphore semaphore, ' +
+                    'VkFence fence', len(entrypoints),
+                    hash('AcquireImageANDROID'), None))
+
+entrypoints.append(('VkResult', 'QueueSignalReleaseImageANDROID',
+                    'VkQueue queue, ' +
+                    'VkImage image, ' +
+                    'int *pNativeFenceFd', len(entrypoints),
+                    hash('QueueSignalReleaseImageANDROID'), None))
+
 # For outputting entrypoints.h we generate a anv_EntryPoint() prototype
 # per entry point.
 

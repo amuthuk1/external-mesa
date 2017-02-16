@@ -55,6 +55,33 @@ VKAPI_ATTR VkResult VKAPI_CALL vkCreateDmaBufImageINTEL(
 
 #endif
 
+#ifdef VK_USE_PLATFORM_ANDROID_KHR
+typedef VkResult (VKAPI_PTR *PFN_vkGetSwapchainGrallocUsageANDROID)(VkDevice device, VkFormat format, VkImageUsageFlags imageUsage, int* grallocUsage);
+typedef VkResult (VKAPI_PTR *PFN_vkAcquireImageANDROID)(VkDevice device, VkImage image, int nativeFenceFd, VkSemaphore semaphore, VkFence fence);
+typedef VkResult (VKAPI_PTR *PFN_vkQueueSignalReleaseImageANDROID)(VkQueue queue, VkImage image, int* pNativeFenceFd);
+
+#ifndef VK_NO_PROTOTYPES
+VKAPI_ATTR VkResult VKAPI_CALL vkGetSwapchainGrallocUsageANDROID(
+    VkDevice                                    device,
+    VkFormat                                    format,
+    VkImageUsageFlags                           imageUsage,
+    int*                                        grallocUsage);
+
+VKAPI_ATTR VkResult VKAPI_CALL vkAcquireImageANDROID(
+    VkDevice                                    device,
+    VkImage                                     image,
+    int                                         nativeFenceFd,
+    VkSemaphore                                 semaphore,
+    VkFence fence);
+
+VKAPI_ATTR VkResult VKAPI_CALL vkQueueSignalReleaseImageANDROID(
+    VkQueue                                     queue,
+    VkImage                                     image,
+    int*                                        pNativeFenceFd);
+#endif
+
+#endif
+
 #ifdef __cplusplus
 } // extern "C"
 #endif // __cplusplus

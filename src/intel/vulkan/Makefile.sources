@@ -51,6 +51,9 @@ VULKAN_WSI_WAYLAND_FILES := \
 VULKAN_WSI_X11_FILES := \
 	anv_wsi_x11.c
 
+VULKAN_WSI_ANDROID_FILES := \
+	anv_wsi_android.c
+
 VULKAN_GEM_FILES := \
 	anv_gem.c
 
