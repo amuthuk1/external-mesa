@@ -173,6 +173,8 @@ LOCAL_C_INCLUDES := \
 	$(ANV_INCLUDES) \
 	$(MESA_TOP)/src/compiler
 
+LOCAL_CFLAGS += -isystem frameworks/native/vulkan/include
+
 LOCAL_WHOLE_STATIC_LIBRARIES := \
 	libmesa_anv_entrypoints \
 	libmesa_genxml \

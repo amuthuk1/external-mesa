@@ -32,6 +32,10 @@
 
 #include "vk_format_info.h"
 
+#ifdef VK_USE_PLATFORM_ANDROID_KHR
+#include <vulkan/vk_android_native_buffer.h>
+#endif
+
 /**
  * Exactly one bit must be set in \a aspect.
  */
@@ -255,6 +259,41 @@ anv_image_create(VkDevice _device,
    VkResult r;
 
    assert(pCreateInfo->sType == VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO);
+
+#ifdef VK_USE_PLATFORM_ANDROID_KHR
+   const VkImageCreateInfo* infop =
+      (const VkImageCreateInfo*)(pCreateInfo->pNext);
+
+   while (infop && infop->sType != VK_STRUCTURE_TYPE_NATIVE_BUFFER_ANDROID)
+      infop = (const VkImageCreateInfo*) (infop->pNext);
+
+   if (infop) {
+     const VkNativeBufferANDROID* buffer =
+        (const VkNativeBufferANDROID*) (infop);
+
+     const native_handle_t* handle =
+        (const native_handle_t*) (buffer->handle);
+
+     VkDeviceMemory pMem;
+     VkDmaBufImageCreateInfo dmabufInfo = {
+        .sType = VK_STRUCTURE_TYPE_DMA_BUF_IMAGE_CREATE_INFO_INTEL,
+        .pNext = NULL,
+        .fd = handle->data[0],
+        .format = pCreateInfo->format,
+        .extent = {
+           .width = pCreateInfo->extent.width,
+           .height = pCreateInfo->extent.height,
+           .depth = pCreateInfo->extent.depth,
+        },
+        // FIXME magic, we know this surface tiling to be I915_TILING_X and
+        // take this in to account when giving stride, Mesa will internally
+        // use this exact value as row pitch validation for the surface.
+        .strideInBytes = buffer->stride * 4,
+     };
+     return anv_CreateDmaBufImageINTEL(_device, &dmabufInfo, alloc, &pMem,
+                                       pImage);
+   }
+#endif
 
    anv_assert(pCreateInfo->mipLevels > 0);
    anv_assert(pCreateInfo->arrayLayers > 0);
