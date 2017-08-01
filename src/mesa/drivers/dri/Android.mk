@@ -33,6 +33,7 @@ MESA_DRI_CFLAGS := \
 
 MESA_DRI_C_INCLUDES := \
 	$(addprefix $(MESA_TOP)/, $(mesa_dri_common_INCLUDES)) \
+	$(call generated-sources-dir-for,STATIC_LIBRARIES,libmesa_util,,) \
 	$(MESA_TOP)/src/gallium/include \
 	$(MESA_TOP)/src/gallium/auxiliary \
 	external/expat/lib
