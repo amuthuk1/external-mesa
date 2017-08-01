@@ -799,6 +799,10 @@ do_single_blorp_clear(struct brw_context *brw, struct gl_framebuffer *fb,
    if (irb->layer_count > 1 || irb->mt_level || irb->mt_layer)
       can_fast_clear = false;
 
+   /* Workaround for pbuffer issues. */
+   if (fb->Visual.doubleBufferMode == 0)
+      can_fast_clear = false;
+
    unsigned level = irb->mt_level;
    const unsigned num_layers = fb->MaxNumLayers ? irb->layer_count : 1;
 
